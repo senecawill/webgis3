@@ -1,0 +1,18 @@
+[
+    {
+        "title": ""
+    },
+    {
+        "title": "API",
+        "property" : "api",
+        "filter" : {
+            "type" : "list"
+        },
+        "sortAs" : "string"
+    },
+    {
+        "title" : "Operator",
+        "property" : "operator",
+    }
+
+]

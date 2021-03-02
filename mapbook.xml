@@ -1,0 +1,628 @@
+<?xml version="1.0"?>
+<mapbook version="3.0">
+    <!--
+        The mapping services define the source of the mapping data.
+    -->
+
+    <map-source name="sketch" type="vector" title="User Layer Editor">
+        <layer name="default" selectable="true" status="on">
+            <style><![CDATA[
+            {
+                "circle-radius": 4,
+                "circle-color": "#fec44f",
+                "fill-color": "#fec44f",
+                "circle-stroke-color": "#d95f0e",
+                "line-color": "#d95f0e",
+                "line-width": 4,
+                "fill-opacity": 0.60,
+                "line-opacity": 0.80
+            }
+            ]]></style>
+            <!--
+            <legend type="html"><![CDATA[
+            The <b>Drawing and Markup</b> layer can be used to add user defined shapes
+            to the map.<br>
+            <div style='padding-top: 3px; padding-bottom: 5px;'>
+                <div style='vertical-align: middle; display: inline-block; width: 2em; height: 1em; background-color: #fec44f; border: solid 2px #d95f0e;'></div>
+                <b>Drawing</b>
+            </div>
+            ]]></legend>
+            -->
+            <template name="identify" auto="true" />
+        </layer>
+    </map-source>
+
+    
+
+
+<!--
+	Seneca Maps
+-->
+
+<!--
+	User Layers - *SHOULD BE GENERATED IN PHP*
+-->
+
+<map-source
+        name="Test_Leases_wfs"
+        type="wfs"
+    >
+        <!-- GeoMoose support GeoServer being on a different domain
+             as long as GeoServer has been configured with CORS support.
+             See: https://docs.geoserver.org/latest/en/user/production/container.html#enable-cors
+        -->
+        <url>https://webgis3.senecainfo.com:6660/geoserver/SenecaWFST/wfs?</url>
+        <!-- The typename with GeoServer is the combination of the
+             workspace name and the layer name joined with a colon
+        -->
+        <param name="typename" value="SenecaWFST:Test_Leases" />
+        <!-- This will match the geometry colum name in geoserver -->
+        <config name="geometry-name" value="the_geom" />
+        <!-- this needs to match the workspace of the GeoServer layer -->
+        <config name="namespace-uri" value="senecawfst.senecainfo.com" />
+        <!-- specifying by URN will ensure that axis-order is correct -->
+        <config name="srs" value="urn:ogc:def:crs:EPSG::4326" />
+        <!-- speicfy the ID column -->
+        <config name="id-property" value="id_key" />
+
+        <!-- make sure there is no tolerance on polygon layers -->
+	<!--
+        <config name="pixel-tolerance" value="0" />
+	-->
+        <properties>
+            <property name="leaseid"    label="leaseid" />
+            <property name="notes"      label="notes" />
+            <property name="checked"    label="checked" />
+        </properties>
+
+        <!-- the layer name does not need to match the typename but
+             it is a good idea.
+        -->
+        <layer name="Test_Leases_wfs">
+
+        </layer>
+    </map-source>
+
+    <map-source
+        name="Test_Leases"
+        type="wms"
+    >
+        <url>https://webgis3.senecainfo.com:6660/geoserver/SenecaWFST/wms?</url>
+
+        <layer name="Test_Leases" query-as="Test_Leases_wfs/Test_Leases_wfs" >
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+    </map-source>
+
+
+<!--
+    West Virginia
+-->
+    <map-source name="WV_Wells" type="wms" title="WV Wells">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Wells" status="on">
+            <param name="FORMAT" value="image/png"/>
+            <param name="TRANSPARENT" value="TRUE"/>
+            <param name="cross-origin" value="anonymous"/>
+            <!--  Commented out to create custom template with document link
+            <template name="identify" auto="true" />
+            -->
+            <template name="identify" src="./templates/WV_Wells_Identify_Template.html"></template>
+            
+
+        </layer>
+    </map-source>
+    
+    <map-source name="WV_Wells_WFS" type="wfs">
+         <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wfs?</url>
+         <param name="typename" value="WebGIS:WV_Wells"/>
+         <param name="cross-origin" value="anonymous"/>
+         <layer name="WebGIS:WV_Wells" status="off">
+             <!--
+             <template name="search" auto="true" />
+             -->
+             <style><![CDATA[{"line-color": "blue"}]]></style>
+             <template name="search" src="./templates/WV_Wells_Search_Template.html"></template>
+        </layer>
+    </map-source>
+
+
+    
+    
+    <map-source name="WV_Horizontals" type="wms" title="WV Laterals">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Horizontals" status="on">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+    
+<!--
+    <map-source name="WV_2018_Parcels_Assessment" type="wms" title = "WV Parcel Layer">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_2018_Parcels_Assessment" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+-->
+
+    <map-source name="WV_Counties" type="wms" title="WV Counties">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Counties" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+
+    <map-source name="WV_Districts" type="wms" title="WV Districts">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Districts" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+
+    <map-source name="WV_Keller" type="wms" title="WV Keller Farmlines">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS_Images_WV/wms?</url>
+        <layer name="WebGIS_Images_WV:WV_Keller" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+
+    <map-source name="WV_Farm_Acre_Points" type="wms" title="WV Keller Farmline Data">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Farm_Acre_Points" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+    
+    <map-source name="WV_Farmlines_Clean" type="wms" title="WV Operator Farmlines">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Farmlines_Clean" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+
+    <map-source name="WV_Unknown_Map_Points" type="wms" title="WV Operator Farmline Data">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Unknown_Map_Points" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+
+    <map-source name="WV_Lease_Acres" type="wms" title="WV Lease Acreages">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Lease_Acres" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+
+    <map-source name="WV_Logs" type="wms" title="WVGES Well Logs">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Logs" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+
+    <map-source name="WV_Place_Names" type="wms" title="WV Place Names">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Place_Names" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+
+    <map-source name="WV_Production" type="wms" title="WVDEP Production">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Production" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+
+    <map-source name="WV_Taxmap_Grid" type="wms" title="WV Tax Map Grid">
+        <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+        <layer name="WebGIS:WV_Taxmap_Grid" status="off">
+            <template name="identify" auto="true" />
+        </layer>
+        <param name="FORMAT" value="image/png"/>
+        <param name="TRANSPARENT" value="TRUE"/>
+        <param name="cross-origin" value="anonymous"/>
+    </map-source>
+
+   <!--
+       Pennsylvania
+   -->
+   <map-source name="PA_Wells" type="wms" title="PA Wells">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:PA_Wells" status="on">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   
+   <map-source name="PA_Horizontals" type="wms" title="PA Laterals">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:PA_Horizontals" status="on">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+
+   <map-source name="PA_Counties" type="wms" title="PA Counties">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:PA_Counties" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+
+   <map-source name="PA_Farmlines_Greene" type="wms" title="PA Farmlines Greene">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS_Images_PA/wms?</url>
+       <layer name="WebGIS_Images_PA:PA_Farmlines_Greene" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   
+   <map-source name="PA_EQT_Map_Points" type="wms" title="PA Farmline Acrages">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:PA_EQT_Map_Points" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+
+   
+   <map-source name="PA_Municipal_Boundaries" type="wms" title="PA Municipal Boundaries">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:PA_Municipal_Boundaries" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   
+   <map-source name="PA_Place_Names" type="wms" title="PA Place Names">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:PA_Place_Names" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   
+   <map-source name="PA_Quadrangles" type="wms" title="PA Quadrangles">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:PA_Quadrangles" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   
+   <map-source name="PA_Warrant_Maps_Greene" type="wms" title="PA Warrant Maps Greene">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS_Images_PA/wms?</url>
+       <layer name="WebGIS_Images_PA:PA_Warrant_Maps_Greene" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   
+   
+   <!--
+       Ohio
+   -->
+   <map-source name="OH_Wells" type="wms" title="OH Wells">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:OH_Wells" status="on">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   
+   <map-source name="OH_Horizontals" type="wms" title="PA Laterals">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:OH_Horizontals" status="on">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+
+   <map-source name="OH_Counties" type="wms" title="OH Counties">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:OH_Counties" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+
+   <!--
+   <map-source name="PA_Farmlines_Greene" type="wms" title="PA Farmlines Greene">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS_Images_PA/wms?</url>
+       <layer name="WebGIS_Images_PA:PA_Farmlines_Greene" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   -->
+   
+   <map-source name="OH_Atlas_Points" type="wms" title="OH Atlas Acreages">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:OH_Atlas_Points" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+
+   <map-source name="OH_Atlases" type="wms" title="OH Atlases">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS_Images_OH/wms?</url>
+       <layer name="WebGIS_Images_OH:OH_Atlases" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   
+   <map-source name="OH_Townships" type="wms" title="OH Townships">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:OH_Townships" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   
+   <map-source name="OH_Place_Names" type="wms" title="OH Place Names">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:OH_Place_Names" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   
+   <map-source name="OH_Quadrangles" type="wms" title="OH Quadrangles">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS/wms?</url>
+       <layer name="WebGIS:OH_Quadrangles" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   
+   <!--
+   <map-source name="PA_Warrant_Maps_Greene" type="wms" title="PA Warrant Maps Greene">
+       <url>https://webgis3.senecainfo.com:6660/geoserver/WebGIS_Images_PA/wms?</url>
+       <layer name="WebGIS_Images_PA:PA_Warrant_Maps_Greene" status="off">
+           <template name="identify" auto="true" />
+       </layer>
+       <param name="FORMAT" value="image/png"/>
+       <param name="TRANSPARENT" value="TRUE"/>
+       <param name="cross-origin" value="anonymous"/>
+   </map-source>
+   -->
+   
+   <!--
+       BASE MAPS
+   -->
+<!--
+       <map-source name="CoreLogic_Parcels" type="ags">
+           <url>https://server-arcgis.corelogic.com/arcgis/rest/services/SpatialRecord_OG_Pro_MS/MapServer</url>
+           <layer name="CoreLogic_Parcels" status="on"/>
+           <param name="token" value="{token}"/>
+           <param name="FORMAT" value="png"/>
+       </map-source>
+
+       <map-source name="ags" type="ags">
+           <url>https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer</url>
+           <layer name="NatGeo_World_Map" status="on"/>
+           <param name="FORMAT" value="png"/>
+           <param name="cross-origin" value="anonymous"/>
+       </map-source>
+-->
+
+ <map-source name="CoreLogic_Parcels" type="ags" title="Surface Parcels - Image" maxresolution="20">
+     <url>https://server-arcgis.corelogic.com/arcgis/rest/services/SpatialRecord_OG_Pro_MS/MapServer</url>
+     <layer name="CoreLogic_Parcels" status="off">
+       <template name="identify" auto="true" />
+       <template name="select"   auto="true" />
+    </layer>
+     <param name="format" value="png24"/>
+    <param name="token" value="{token}"/>
+ </map-source>
+
+<map-source name="CoreLogic_Parcels_Vectors" type="ags-vector" title="Surface Parcels - Vectors" maxresolution="5">
+    <url>https://server-arcgis.corelogic.com/arcgis/rest/services/SpatialRecord_OG_Pro_FS/FeatureServer/2</url>
+    <layer name="CoreLogic_Parcels" status="off">
+       <style><![CDATA[
+         {
+         "text-font": ["literal", ["DIN Offc Pro Italic", "Arial Unicode MS Regular"]],
+         "text-size": 16.0,
+         "text-field": "{APN}",
+         "text-halo-width":2,
+         "text-halo-color":"white",
+         "text-halo-blur":0,
+         "text-color": "#A16214"
+         }
+         ]]></style>
+       <template name="identify" auto="true" />
+       <template name="select"   auto="true" />
+        <template name="gridColumns" auto="true" />
+        <template name="gridRow" auto="true" />
+    </layer>
+    <param name="token" value="{token}"/>
+    <!-- <param name="outFields" value="PARCEL_ID,APN"/>  -->
+</map-source>
+
+
+ <map-source name="ags"               type="xyz">
+     <layer name="World_Topo_Map"/>
+     <url>https://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}</url>
+ </map-source>
+
+
+
+    <!--
+        The catalog defines how the layers will be displayed in the catalog tab.
+    -->
+    <catalog>
+        <!-- Layer for testing international character support.
+        <layer title="Test International Characters" src="international/testing"/>
+        -->
+
+        <layer title="Surface Parcels" src="CoreLogic_Parcels_Vectors/CoreLogic_Parcels;CoreLogic_Parcels/CoreLogic_Parcels"/>
+
+        <group title="Feature Editing" expand="true">
+            <group title="User Editable Layers" expand="true">
+                <layer
+                    title="Test_Leases"
+                    src="Test_Leases/Test_Leases"
+                    draw-edit="true"
+                    draw-modify="true"
+                    draw-polygon="true"
+                    draw-remove="true"
+                />
+            </group>
+        </group>
+
+        <group title="Seneca Technologies" status="on" expand="true">
+            <group title="West Virginia" status="on" expand="false">
+                <layer title="WV Wells" src="WV_Wells/WebGIS:WV_Wells" show-legend="false" />
+                <layer title="WV Laterals" src="WV_Horizontals/WebGIS:WV_Horizontals" show-legend="false" />
+                <!--
+                <layer title="Parcels" src="WV_2018_Parcels_Assessment/WebGIS:WV_2018_Parcels_Assessment" show-legend="false" />
+                -->
+                <layer title="WV Counties" src="WV_Counties/WebGIS:WV_Counties" show-legend="false" />
+                <layer title="WV Districts" src="WV_Districts/WebGIS:WV_Districts" show-legend="false" />
+                <layer title="WV Keller Farmlines" src="WV_Keller/WebGIS_Images_WV:WV_Keller" show-legend="false" />
+                <layer title="WV Keller Farmline Data" src="WV_Farm_Acre_Points/WebGIS:WV_Farm_Acre_Points" show-legend="false" />
+                <layer title="WV Operator Farmlines" src="WV_Farmlines_Clean/WebGIS:WV_Farmlines_Clean" show-legend="false" />
+                
+                <layer title="WV Operator Farmline Data" src="WV_Unknown_Map_Points/WebGIS:WV_Unknown_Map_Points" show-legend="false" />
+                
+                <layer title="WV Well Lease Acrages" src="WV_Lease_Acres/WebGIS:WV_Lease_Acres" show-legend="false" />
+                <layer title="WVGES Well Logs" src="WV_Logs/WebGIS:WV_Logs" show-legend="false" />
+                <layer title="WV Place Names" src="WV_Place_Names/WebGIS:WV_Place_Names" show-legend="false" />
+                <layer title="WVDEP Well Production" src="WV_Production/WebGIS:WV_Production" show-legend="false" />
+                <layer title="WV Taxmap Grid" src="WV_Taxmap_Grid/WebGIS:WV_Taxmap_Grid" show-legend="false" />
+            </group>
+            <group title="Pennsylvania" status="on" expand="false">
+                <layer title="PA Wells" src="PA_Wells/WebGIS:PA_Wells" show-legend="false" />
+                <layer title="PA Laterals" src="PA_Horizontals/WebGIS:PA_Horizontals" show-legend="false" />
+                <layer title="PA Counties" src="PA_Counties/WebGIS:PA_Counties" show-legend="false" />
+                <layer title="PA Farmline Acreages" src="PA_EQT_Map_Points/WebGIS:PA_EQT_Map_Points" show-legend="false" />
+                <layer title="PA Farmlines Greene" src="PA_Farmlines_Greene/WebGIS_Images_PA:PA_Farmlines_Greene" show-legend="false" />
+                <layer title="PA Municipal Boundaries" src="PA_Municipal_Boundaries/WebGIS:PA_Municipal_Boundaries" show-legend="false" />
+                <layer title="PA Place Names" src="PA_Place_Names/WebGIS:PA_Place_Names" show-legend="false" />
+                <layer title="PA Quadrangles" src="PA_Quadrangles/WebGIS:PA_Quadrangles" show-legend="false" />
+                <layer title="PA Warrant Maps Greene" src="PA_Warrant_Maps_Greene/WebGIS_Images_PA:PA_Warrant_Maps_Greene" show-legend="false" />
+            </group>
+            <group title="Ohio" status="on" expand="false">
+                <layer title="OH Wells" src="OH_Wells/WebGIS:OH_Wells" show-legend="false" />
+                <layer title="OH Laterals" src="OH_Horizontals/WebGIS:OH_Horizontals" show-legend="false" />
+                <layer title="OH Counties" src="OH_Counties/WebGIS:OH_Counties" show-legend="false" />
+                <layer title="OH Atlases" src="OH_Atlases/WebGIS_Images_OH:OH_Atlases" show-legend="false" />
+                <layer title="OH Atlas Acreages" src="OH_Atlas_Points/WebGIS:OH_Atlas_Points" show-legend="false" />
+                <!--<layer title="PA Farmlines Greene" src="PA_Farmlines_Greene/WebGIS_Images_PA:PA_Farmlines_Greene" show-legend="false" />-->
+                <layer title="OH Townships" src="OH_Townships/WebGIS:OH_Townships" show-legend="false" />
+                <layer title="OH Place Names" src="OH_Place_Names/WebGIS:OH_Place_Names" show-legend="false" />
+                <layer title="OH Quadrangles" src="OH_Quadrangles/WebGIS:OH_Quadrangles" show-legend="false" />
+                <!--<layer title="PA Warrant Maps Greene" src="PA_Warrant_Maps_Greene/WebGIS_Images_PA:PA_Warrant_Maps_Greene" show-legend="false" />-->
+            </group>
+        </group>
+
+ 
+        <group title="Base Maps" status="on" expand="true">
+             <layer title="National Geographic" src="ags/World_Topo_Map" show-legend="false" legend="false" fade="true" unfade="true"/>
+        </group>
+
+        <layer src="sketch/default"
+               zoomto="true" upload="true" download="true" clear="true"
+               draw-point="true" draw-line="true" draw-polygon="true"
+               draw-modify="true" draw-remove="true">
+        </layer>
+	</catalog>
+
+    <!--
+        The toolbar defines which services are referneces in the toolbar
+    -->
+    <toolbar>
+        <tool name="fullextent" title="Zoom to Full Extent" type="action"/>
+        <tool name="measure" title="Measure" type="service"/>
+        <tool name="print" title="Print" type="action"/>
+
+        <tool name="identify" title="Identify" type="service"/>
+
+        <tool name="select" title="Select Features" type="service"/>
+
+        <drawer name="searches" title="Search">
+            <tool name="search-wells" title="Search Wells" type="service"/>
+            <tool name="geocode" title="Geocode an Address" type="service"/>
+        </drawer>
+
+        <tool name="findme" title="Find Me" type="action"/>
+        <tool name="reload" title="Start Over" type="action"/>
+    </toolbar>
+</mapbook>
