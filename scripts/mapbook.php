@@ -1,4 +1,7 @@
 <?php
+
+include ('request_layers.php');
+
 // -------------------------------------------------------------------
 // Notes:
 // -------------------------------------------------------------------
@@ -21,13 +24,20 @@ $hFile = fopen($file, "r");
 $token = getToken();
 // ------ Send XML header: ------
 header('Content-Type: text/xml');
-ob_clean(); // flush the output
+//ob_clean(); // flush the output
 
-// ------ Read lines in mapbook, substitute token, send the lines to the browser: ------
+
+//GET LAYER LIST
+$mapBookParts = getLayerList();
+
+
+// ------ Read lines in mapbook, substitute token and layer list, send the lines to the browser: ------
 if ($hFile) {
     while (($line = fgets($hFile)) !== false) {
-        $modline = str_replace("{token}", $token , $line);
-        echo $modline;
+        $modline = str_replace('{token}', $token , $line);
+        $modline2 = str_replace('<!-- {EDIT_MAPSOURCES} -->', $mapBookParts[0], $modline);
+        $modline3 = str_replace('<!--  {EDIT_CATALOGLAYERS}  -->', $mapBookParts[1], $modline2);
+        echo $modline3;
     }
     fclose($hFile);
 //    message("Sent file: " . $file );
@@ -45,7 +55,7 @@ function getToken() {
     //      -d referer=www.senecatechnologies.com
     //      -d f=json
     //      https://arcgis.corelogic.com/arcgis/sharing/generateToken
-    echo "1";
+
     $url = "https://arcgis.corelogic.com/arcgis/sharing/rest/generateToken";
     $timeout = 5; // set to zero for no timeout
     $post_data = [
@@ -54,9 +64,9 @@ function getToken() {
         'referer'  => 'www.senecatechnologies.com',
         'f'        => 'json'
     ];
-    echo "2";
+
     $ch = curl_init();
-    echo "3";
+
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  // fix to allow HTTPS connections with incorrect certificates
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
     curl_setopt($ch, CURLOPT_URL,$url);
